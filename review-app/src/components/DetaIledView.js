@@ -9,7 +9,7 @@ const DetailedView = (props) => {
   const [inputValue, updateInputValue] = useState("");
   const [showWarning, setShowWarning] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editView, setEditView] = useState(
+  const [postedView, setPostedView] = useState(
     commentExists(props.comments, review.id)
   );
 
@@ -21,8 +21,12 @@ const DetailedView = (props) => {
   };
   const editComment = () => {
     setIsEditing(true);
-    setEditView(false);
+    setPostedView(false);
     updateInputValue(findExistingComment(review.id));
+  };
+  const cancelEdit = () => {
+    setPostedView(true);
+    setIsEditing(false);
   };
   const handleEditSubmit = (arr) => {
     if (inputValue.length > 0) {
@@ -31,7 +35,7 @@ const DetailedView = (props) => {
       );
       props.setComment(updatedComments);
       setShowWarning(false);
-      setEditView(true);
+      setPostedView(true);
     } else {
       setShowWarning(true);
     }
@@ -43,7 +47,7 @@ const DetailedView = (props) => {
         { id: review.id, comment: inputValue },
       ]);
       setShowWarning(false);
-      setEditView(true);
+      setPostedView(true);
       updateInputValue("");
     } else {
       setShowWarning(true);
@@ -66,7 +70,7 @@ const DetailedView = (props) => {
         <StarRating rating={review.rating} />
         <br />
         <p>{review.content}</p>
-        {editView ? (
+        {postedView ? (
           <Card>
             <Card.Body>
               <Row>
@@ -109,6 +113,14 @@ const DetailedView = (props) => {
               >
                 Submit
               </Button>
+              {isEditing && (
+                <Button
+                  className="float-start mt-2"
+                  onClick={() => cancelEdit()}
+                >
+                  Cancel
+                </Button>
+              )}
             </Form.Group>
           </Form>
         )}
