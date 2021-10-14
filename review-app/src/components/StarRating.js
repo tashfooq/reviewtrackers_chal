@@ -7,8 +7,8 @@ const StarRating = (props) => {
     // console.log([...Array(rating)])
     return (
         <div>
-            {[...Array(rating)].map(star => (
-                <Star fill="#FDCC0D" />
+            {[...Array(rating)].map((star, index) => (
+                <Star fill="#FDCC0D" key={index} />
             ))}
         </div>
     )

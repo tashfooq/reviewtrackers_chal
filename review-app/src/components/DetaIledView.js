@@ -25,11 +25,16 @@ const DetailedView = (props) => {
     updateInputValue(findExistingComment(review.id));
   };
   const handleEditSubmit = (arr) => {
-    let updatedComments = props.comments.map((item) =>
-      item.id === review.id ? { ...item, comment: inputValue } : item
-    );
-    props.setComment(updatedComments);
-    setEditView(true);
+    if (inputValue.length > 0) {
+      let updatedComments = props.comments.map((item) =>
+        item.id === review.id ? { ...item, comment: inputValue } : item
+      );
+      props.setComment(updatedComments);
+      setShowWarning(false);
+      setEditView(true);
+    } else {
+      setShowWarning(true);
+    }
   };
   const handleSubmit = () => {
     if (inputValue.length > 0) {
@@ -52,6 +57,7 @@ const DetailedView = (props) => {
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
+      data-testid="detail"
     >
       <Modal.Header closeButton>
         <Modal.Title>{review.place}</Modal.Title>
@@ -65,10 +71,16 @@ const DetailedView = (props) => {
             <Card.Body>
               <Row>
                 <Col>
-                  <p>{findExistingComment(review.id)}</p>
+                  <p data-testid="posted_comment">
+                    {findExistingComment(review.id)}
+                  </p>
                 </Col>
                 <Col>
-                  <More className="float-end" onClick={() => editComment()} />
+                  <More
+                    data-testid="three_dot"
+                    className="float-end"
+                    onClick={() => editComment()}
+                  />
                 </Col>
               </Row>
             </Card.Body>
@@ -87,6 +99,7 @@ const DetailedView = (props) => {
                 row={3}
                 value={inputValue}
                 onChange={(e) => updateInputValue(e.target.value)}
+                data-testid="text_input"
               />
               <Button
                 className="float-end mt-2"

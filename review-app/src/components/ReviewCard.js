@@ -10,12 +10,10 @@ const ReviewCard = (props) => {
   const [detailedView, setDetailedView] = useState(false);
   const [selectedReview, setSelectedReview] = useState({});
   const [comments, setComment] = useState([]);
-  const [detailedViewKey, setDetailedViewKey] = useState(null);
 
   const handleCardClick = (review, index) => {
     setDetailedView(true);
     setSelectedReview({ ...review, id: index });
-    setDetailedViewKey(index);
   };
   const truncateString = (str) => {
     if (str.length > 120) {
@@ -24,11 +22,15 @@ const ReviewCard = (props) => {
       return str;
     }
   };
+  const formatDateString = (str) => {
+    let date = new Date(str).toLocaleDateString("en-US");
+    return date;
+  };
 
   return (
     <Container>
       <DetailedView
-        key={detailedViewKey}
+        key={selectedReview.id}
         review={selectedReview}
         show={detailedView}
         onHide={() => setDetailedView(false)}
@@ -42,6 +44,7 @@ const ReviewCard = (props) => {
               key={index}
               style={{ width: "25rem" }}
               onClick={() => handleCardClick(review, index)}
+              data-testid="card"
             >
               <Card.Body>
                 <Card.Title>{review.place}</Card.Title>
@@ -52,15 +55,17 @@ const ReviewCard = (props) => {
                     <p>{review.author}</p>
                   </Col>
                   <Col>
-                    <p>
-                      {new Date(review.published_at).toLocaleDateString(
-                        "en-US"
-                      )}
+                    <p data-testid="date">
+                      {formatDateString(review.published_at)}
                     </p>
                   </Col>
                   <Col>
                     {commentExists(comments, index) && (
-                      <Replies className="float-end" fill="#0d6efd" />
+                      <Replies
+                        data-testid="replies_icon"
+                        className="float-end"
+                        fill="#0d6efd"
+                      />
                     )}
                   </Col>
                 </Row>
